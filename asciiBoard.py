@@ -1,6 +1,10 @@
 # a program to create game boards in the command line 
 
 import os 
+import time 
+import sys
+import termios 
+import tty
 
 class Board: 
     def __init__(self, height, width):
@@ -11,8 +15,13 @@ class Board:
         for y in range(height):
             rowList = []
             for x in range(width):
-                rowList.append("⬜️")
+                rowList.append("🧱")
             self.contents.append(rowList)
+    
+    def clr(self): 
+        for row in range(self.height):
+            self.contents[row] = ["⬜️"]*self.width
+
     def __str__(self):
         os.system("clear")
         brdStr ="" 
@@ -24,8 +33,17 @@ class Board:
     def updateCell(self,x, y, sprite):
         self.contents[y][x] = sprite
 
-brd = Board(20, 24)
+    def shift(self): 
+        for row in range(self.height): 
+            self.contents[row].append(self.contents[row][0])
+            self.contents[row] = self.contents[row][1:]
 
+   
+
+    def scroll(self): 
+        for col in range(self.width): 
+            self.shift()
+            print(self)
 class Player: 
     def __init(self,sprite,  name, x, y):
         self.name = name
@@ -34,8 +52,17 @@ class Player:
 
     def __str__(self):
         return self.sprite
+def getch():
+    fd = sys.stdin.fileno()
+    oldSet = termios.tcgetattr(fd)
+    try: 
+        tty.setraw(fd) 
+        ch = sys.stdin.read(1)
+    finally: 
+        termios.tcsetattr(fd,termios.TCSADRAIN ,oldSet)
+    return ch
 
-
+print(getch())
 
 
 class Game: 
@@ -45,7 +72,9 @@ class Game:
     def run(self):
         cursX = 0
         cursY =0
-        while(self.active): 
+        while(self.active):
+            
+            
             mv = input("What is the next move? ")
             if ( mv == "fin"):
                 self.active == False
@@ -62,7 +91,12 @@ class Game:
             if (mv == "d"):
                 self.board.updateCell(cursX+1, cursY, "⬛" )
                 cursX +=1
-
+            if (mv == "clr"):
+                self.board.clr()
+            if (mv == "sh"): 
+                self.board.shift()
+            if (mv == "scr"): 
+                self.board.scroll()
             print(self.board)
 
 gm = Game()
