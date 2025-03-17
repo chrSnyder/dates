@@ -67,16 +67,16 @@ print(getch())
 
 class Game: 
     def __init__(self):
-        self.board = Board(10,14) 
+        self.board = Board(30,14) 
         self.active = True 
     def run(self):
         cursX = 0
         cursY =0
         while(self.active):
             
-            
-            mv = input("What is the next move? ")
-            if ( mv == "fin"):
+            mv = getch()
+           # mv = input("What is the next move? ")
+            if ( mv == "f"):
                 self.active == False
                 break
             if (mv == "w"):
@@ -91,11 +91,11 @@ class Game:
             if (mv == "d"):
                 self.board.updateCell(cursX+1, cursY, "⬛" )
                 cursX +=1
-            if (mv == "clr"):
+            if (mv == "c"):
                 self.board.clr()
-            if (mv == "sh"): 
+            if (mv == "x"): 
                 self.board.shift()
-            if (mv == "scr"): 
+            if (mv == "z"): 
                 self.board.scroll()
             print(self.board)
 
