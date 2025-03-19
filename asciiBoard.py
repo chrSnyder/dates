@@ -33,7 +33,13 @@ class Board:
     def updateCell(self,x, y, sprite):
         self.contents[y][x] = sprite
 
-    def shift(self): 
+    def shift(self, direction):
+        if direction == "up": 
+            self.contents = self.contents[1:] + [self.contents[0]]
+            return
+        if direction == "down":  
+            self.contents = [self.contents[-1]] + self.contents[0:-1]
+            return
         for row in range(self.height): 
             self.contents[row].append(self.contents[row][0])
             self.contents[row] = self.contents[row][1:]
@@ -44,6 +50,12 @@ class Board:
         for col in range(self.width): 
             self.shift()
             print(self)
+    def vScroll(self): 
+        while(True):
+            self.contents = self.contents[1:] + [self.contents[0]]
+            time.sleep(.5)
+            print(self) 
+
 class Player: 
     def __init(self,sprite,  name, x, y):
         self.name = name
@@ -62,12 +74,11 @@ def getch():
         termios.tcsetattr(fd,termios.TCSADRAIN ,oldSet)
     return ch
 
-print(getch())
 
 
 class Game: 
     def __init__(self):
-        self.board = Board(30,14) 
+        self.board = Board(20,14) 
         self.active = True 
     def run(self):
         cursX = 0
@@ -76,6 +87,8 @@ class Game:
             
             mv = getch()
            # mv = input("What is the next move? ")
+            if (mv == "v"):
+                self.board.vScroll()
             if ( mv == "f"):
                 self.active == False
                 break
@@ -90,11 +103,11 @@ class Game:
                 cursX -= 1
             if (mv == "d"):
                 self.board.updateCell(cursX+1, cursY, "⬛" )
-                cursX +=1
+                cursX +=1   
             if (mv == "c"):
                 self.board.clr()
             if (mv == "x"): 
-                self.board.shift()
+                self.board.shift("down")
             if (mv == "z"): 
                 self.board.scroll()
             print(self.board)
