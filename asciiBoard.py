@@ -92,16 +92,17 @@ class Game:
             if ( mv == "f"):
                 self.active == False
                 break
-            if (mv == "w"):
+            if (mv == "w" and cursY-1 in [y for y in range(self.board.height)]):
                 self.board.updateCell(cursX, cursY -1, "⬛" )
                 cursY -= 1
-            if (mv == "s"):
+            if (mv == "s" and cursY+1 in [y for y in range(self.board.height)]):
                 self.board.updateCell(cursX, cursY +1, "⬛" )
                 cursY +=1
-            if (mv == "a"):
+            if (mv == "a" and cursX-1 in [x for x in range(self.board.width)]):
                 self.board.updateCell(cursX-1, cursY , "⬛" )
                 cursX -= 1
-            if (mv == "d"):
+            if (mv == "d" and cursX+1 in [x for x in range(self.board.width)]):
+
                 self.board.updateCell(cursX+1, cursY, "⬛" )
                 cursX +=1   
             if (mv == "c"):
