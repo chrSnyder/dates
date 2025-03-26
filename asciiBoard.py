@@ -40,10 +40,15 @@ class Board:
         if direction == "down":  
             self.contents = [self.contents[-1]] + self.contents[0:-1]
             return
-        for row in range(self.height): 
-            self.contents[row].append(self.contents[row][0])
-            self.contents[row] = self.contents[row][1:]
+        if direction == "left":
 
+            for row in range(self.height): 
+                self.contents[row].append(self.contents[row][0])
+                self.contents[row] = self.contents[row][1:]
+        if direction == "right":                 
+            for row in range(self.height):
+                last = self.contents[row].pop()
+                self.contents[row].insert(0, last)
    
 
     def scroll(self): 
@@ -52,7 +57,7 @@ class Board:
             print(self)
     def vScroll(self): 
         while(True):
-            self.contents = self.contents[1:] + [self.contents[0]]
+            self.shift("down")
             time.sleep(.5)
             print(self) 
 
@@ -87,7 +92,7 @@ class Game:
             
             mv = getch()
            # mv = input("What is the next move? ")
-            if (mv == "v"):
+            if (mv == "y"):
                 self.board.vScroll()
             if ( mv == "f"):
                 self.active == False
@@ -102,13 +107,18 @@ class Game:
                 self.board.updateCell(cursX-1, cursY , "⬛" )
                 cursX -= 1
             if (mv == "d" and cursX+1 in [x for x in range(self.board.width)]):
-
                 self.board.updateCell(cursX+1, cursY, "⬛" )
                 cursX +=1   
             if (mv == "c"):
                 self.board.clr()
-            if (mv == "x"): 
+            if (mv == "b"): 
                 self.board.shift("down")
+            if (mv == "h"):
+                self.board.shift("up")
+            if (mv == "n"):
+                self.board.shift("right")
+            if (mv == "v"):
+                self.board.shift("left")
             if (mv == "z"): 
                 self.board.scroll()
             print(self.board)
