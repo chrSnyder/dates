@@ -5,6 +5,7 @@ import time
 import sys
 import termios 
 import tty
+from threading import Timer 
 
 class Board: 
     def __init__(self, height, width):
@@ -17,7 +18,11 @@ class Board:
             for x in range(width):
                 rowList.append("🧱")
             self.contents.append(rowList)
-    
+    def getHeight(self):
+        return self.height
+
+    def getWidth(self):
+        return self.width
     def clr(self): 
         for row in range(self.height):
             self.contents[row] = ["⬜️"]*self.width
@@ -55,10 +60,26 @@ class Board:
         for col in range(self.width): 
             self.shift()
             print(self)
+
+    def doNothing(self):
+        pass
+        print("moving to next iteration")
+        return 0
     def vScroll(self): 
         while(True):
+            t = Timer(.5, self.doNothing)
             self.shift("down")
+            t.start()
             time.sleep(.5)
+            ch = getch()
+            if (ch == "d"): 
+                self.shift("right")
+            if (ch == "a"):
+                self.shift("left")
+            if (ch == "f"):
+                break
+
+            t.cancel()
             print(self) 
 
 class Player: 
@@ -122,6 +143,24 @@ class Game:
             if (mv == "z"): 
                 self.board.scroll()
             print(self.board)
+
+
+class shape: 
+    def __init__(self, form, board): 
+        self.form = form
+
+        self.y = 0
+        self.board = board
+        self.width = 3
+        self.height = 2
+    def draw(x, y): 
+        if x + self.width < self.board.getWidth():
+            self.board.update(x,y, "⬛️")
+            self.board.update(x+1,y, "⬛️")
+            self.board.update(x,y+1, "⬛️")
+            self.board.update(x+1,y+1, "⬛️")
+
+
 
 gm = Game()
 
